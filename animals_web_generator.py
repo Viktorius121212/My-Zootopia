@@ -1,9 +1,5 @@
 import json
-
-
-def load_data(file_path):
-    with open(file_path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+import data_fetcher
 
 
 def serialize_animal(animal):
@@ -31,11 +27,16 @@ def serialize_animal(animal):
 
 
 def main():
-    animals_data = load_data("animals_data.json")
+    animal_name = input("Enter a name of an animal: ")
+    animals_data = data_fetcher.fetch_data(animal_name)
 
     output_string = ""
-    for animal in animals_data:
-        output_string += serialize_animal(animal)
+
+    if len(animals_data) == 0:
+        output_string = f"<h2>The animal '{animal_name}' doesn't exist.</h2>"
+    else:
+        for animal in animals_data:
+            output_string += serialize_animal(animal)
 
     with open("animals_template.html", "r", encoding="utf-8") as template_file:
         template_content = template_file.read()
